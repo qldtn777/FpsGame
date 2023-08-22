@@ -20,6 +20,8 @@ public class PlayerFire : MonoBehaviour
     //필요속성: 피격효과 게임오브젝트, 이펙트 파티클 시스템
     
     
+    //목적3: 레이가 부딪힌 대상이 Enemy라면 데미지를 주겠다.
+
     public GameObject bomb;
     public GameObject firePosition;
     public float power = 5f;
@@ -56,6 +58,7 @@ public class PlayerFire : MonoBehaviour
         //print(string.Format("몫: {0}, 나머지: {1},quotient, remainder));
     }
     int remainder;
+    public int weaponPower = 2;
     void Update()
     {
         //순서1: 마우스 마우스 오른쪽 버튼 누른다.
@@ -94,6 +97,12 @@ public class PlayerFire : MonoBehaviour
                 //피격 이펙트를 재생한다.
                 particleSystem.Play();
 
+                //목적3: 레이가 부딪힌 대상이 Enemy라면 데미지를 주겠다.
+                if (hitInfo.transform.gameObject.layer == LayerMask.NameToLayer("Enemy"))
+                {
+                    EnemyFSM enemyFSM = hitInfo.transform.GetComponent<EnemyFSM>();
+                    enemyFSM.DamageAction(weaponPower);
+                }
             }
         }
     }
