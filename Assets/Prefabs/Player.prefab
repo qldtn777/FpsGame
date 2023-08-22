@@ -137,6 +137,8 @@ MonoBehaviour:
   isJumping: 0
   hp: 10
   hpSlider: {fileID: 0}
+  hitImage: {fileID: 0}
+  hitImageEndTime: 3
 --- !u!143 &592460439887827194
 CharacterController:
   m_ObjectHideFlags: 0

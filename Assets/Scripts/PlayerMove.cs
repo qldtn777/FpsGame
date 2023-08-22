@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -24,6 +25,12 @@ using UnityEngine.UI;
 //필요속성4: hp(이미있음), maxHp, Slider
 
 
+//목적5: 적의 공격을 받았을 때 HitImage를 켰다가 꺼준다.
+//필요속성5: hitImage 게임오브젝트
+
+//목적6: 플레이어가 죽으면 hitImage의 알파값을 현재 값에서 255로 만들어준다.
+//필요속성6: 현재시간, hitImage 종료시간
+
 public class PlayerMove : MonoBehaviour
 {
     //필요속성1: 속도
@@ -45,9 +52,21 @@ public class PlayerMove : MonoBehaviour
     int maxHp = 10;
     public  Slider hpSlider ;
 
+
+    //필요속성5: hitImage 게임오브젝트
+    public GameObject hitImage;
+
+
+
+    //필요속성6: 현재시간, hitImage 종료시간
+    float currentTime;
+    public float hitImageEndTime;
+
     private void Start()
     {
         characterController =GetComponent<CharacterController>();
+       
+        maxHp = hp;
     }
     // Update is called once per frame   
     void Update()
@@ -94,5 +113,60 @@ public class PlayerMove : MonoBehaviour
     public void DamageAction(int damage)
     {
         hp -= damage;
+
+        //목적5: 적의 공격을 받았을 때 HitImage를 켰다가 꺼준다.
+        if (hp > 0)
+        {
+            StartCoroutine(PlayHitEffect());
+        }
+        //목적6: 플레이어가 죽으면 hitImage의 알파값을 현재 값에서 255로 만들어준다.
+        else
+        {
+            StartCoroutine(DeadEffect());
+        }
     }
+
+    
+
+    //목적5: 적의 공격을 받았을 때 HitImage를 켰다가 꺼준다.
+    IEnumerator PlayHitEffect()
+    {
+        hitImage.gameObject.SetActive(true);
+
+        yield return new WaitForSeconds(0.5f);
+
+        hitImage.gameObject.SetActive(false);
+    }
+
+
+    //목적6: 플레이어가 죽으면 hitImage의 알파값을 현재 값에서 255로 만들어준다.
+    IEnumerator DeadEffect()
+    {
+        hitImage.gameObject.SetActive(true);
+        Color hitImageColor = hitImage.GetComponent<Image>().color;
+
+
+        while (true)
+        {
+            currentTime += Time.deltaTime;
+
+            yield return null;
+
+            hitImageColor.a = Mathf.Lerp(0.2f, 1, currentTime / hitImageEndTime);
+            //그릇을 받고 적용을 다시 해줘야한다.
+            hitImage.GetComponent<Image>().color = hitImageColor;
+            
+            //yield return null;
+
+            if (currentTime > hitImageEndTime)
+            {
+                currentTime = 0;
+                 break;
+            }
+
+        }
+        
+
+    }
+
 }

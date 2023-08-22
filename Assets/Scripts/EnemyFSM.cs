@@ -78,7 +78,7 @@ public class EnemyFSM : MonoBehaviour
     public int hp = 3;
 
     //필요속성8: hp(이미있음), maxHp, Slider
-    int maxHp;
+    int maxHp= 3;
     public Slider hpSlider;
 
     // Start is called before the first frame update
@@ -91,6 +91,8 @@ public class EnemyFSM : MonoBehaviour
         characterController = GetComponent<CharacterController>();
 
         originPos = transform.position;
+
+        maxHp = hp;
     }
 
 
@@ -217,6 +219,13 @@ public class EnemyFSM : MonoBehaviour
             currentTime += Time.deltaTime;
             if(currentTime > attackDelay)
             {
+                if (player.GetComponent<PlayerMove>().hp < 0)
+                {
+                    enemyState = EnemyState.Idle;
+                    print("상태 변환:Return -> Idle");
+                    return;
+                }
+
                 player.GetComponent<PlayerMove>().DamageAction(attackPower);
                 print("공격!");
                 currentTime = 0f;

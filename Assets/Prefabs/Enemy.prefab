@@ -46,6 +46,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1282617140514056477}
   - component: {fileID: 1965282700133339630}
+  - component: {fileID: 1342218062988896039}
   m_Layer: 5
   m_Name: Hp Bar
   m_TagString: Untagged
@@ -71,7 +72,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -45328, y: -10136}
+  m_AnchoredPosition: {x: -45397, y: -10136}
   m_SizeDelta: {x: 250, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1965282700133339630
@@ -125,6 +126,19 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1342218062988896039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1255729328615369432}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f570d3f6f934e7349912211aee75c7a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  target: {fileID: 0}
 --- !u!1 &4896196251342129778
 GameObject:
   m_ObjectHideFlags: 0
@@ -138,7 +152,6 @@ GameObject:
   - component: {fileID: 3242134986595642545}
   - component: {fileID: 8180567017513969550}
   - component: {fileID: 8943591924417553795}
-  - component: {fileID: 6189850884929181156}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -259,19 +272,6 @@ MonoBehaviour:
   moveDistance: 20
   hp: 3
   hpSlider: {fileID: 1965282700133339630}
---- !u!114 &6189850884929181156
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4896196251342129778}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f570d3f6f934e7349912211aee75c7a4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  target: {fileID: 0}
 --- !u!1 &5525976177837121221
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,7 +431,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 0
+  m_PresetInfoIsWorld: 1
 --- !u!114 &8383027075728517744
 MonoBehaviour:
   m_ObjectHideFlags: 0
