@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 //목적1: W, A, S, D를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
 //필요속성1: 속도
@@ -19,6 +20,9 @@ using UnityEngine;
 //목적3: 플레이어가 피격을 당하면 hp를 damage만큼 깍는다.
 //필요속성3: hp
 
+//목적4: 현재 플레이어의 Hp(%)를 슬라이더에 적용한다.
+//필요속성4: hp(이미있음), maxHp, Slider
+
 
 public class PlayerMove : MonoBehaviour
 {
@@ -35,6 +39,11 @@ public class PlayerMove : MonoBehaviour
 
     //필요속성3: hp
     public int hp=10;
+
+
+    //필요속성4: hp(이미있음), maxHp, Slider
+    int maxHp = 10;
+    public  Slider hpSlider ;
 
     private void Start()
     {
@@ -76,6 +85,10 @@ public class PlayerMove : MonoBehaviour
         //transform.position += dir * speed * Time.deltaTime;
         //2-2: 캐릭터 컨트롤러로 나를 이동시키고 싶다.
         characterController.Move(dir * speed * Time.deltaTime);
+
+
+        //목적4: 현재 플레이어의 Hp(%)를 슬라이더에 적용한다.
+        hpSlider.value = (float)hp / maxHp;
     }
     //목적3: 플레이어가 피격을 당하면 hp를 damage만큼 깍는다.
     public void DamageAction(int damage)

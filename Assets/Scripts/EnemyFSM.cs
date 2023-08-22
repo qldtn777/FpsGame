@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 //목적1: 적을 FSM 다이어그램에 따라 동작시킨다.
@@ -29,9 +30,11 @@ using UnityEngine;
 
 //목표7: 플레이어의 공격을 받으면 플레이어의 hitDamage만큼 hp를 감소시킨다.
 //필요속성7: hp
+
+//목적8: 현재 에너미의 Hp(%)를 슬라이더에 적용한다.
+//필요속성8: hp(이미있음), maxHp, Slider
 public class EnemyFSM : MonoBehaviour
 {
-
     //필요속성1: 에너미 상태
     enum EnemyState
     {
@@ -66,12 +69,17 @@ public class EnemyFSM : MonoBehaviour
     Vector3 originPos;
     public float moveDistance = 20.0f;
 
+
     //필요속성6: 특정거리
     float returnDistance = 0.1f;
 
 
     //필요속성7: hp
     public int hp = 3;
+
+    //필요속성8: hp(이미있음), maxHp, Slider
+    int maxHp;
+    public Slider hpSlider;
 
     // Start is called before the first frame update
     void Start()
@@ -84,6 +92,7 @@ public class EnemyFSM : MonoBehaviour
 
         originPos = transform.position;
     }
+
 
     // Update is called once per frame
     void Update()
@@ -110,7 +119,10 @@ public class EnemyFSM : MonoBehaviour
                 //Die();
                 break;
         }
+
+        hpSlider.value = (float)hp / maxHp;
     }
+
 
     private void Die()
     {
@@ -118,6 +130,7 @@ public class EnemyFSM : MonoBehaviour
 
         StartCoroutine(DieProcess());
     }
+
 
     //2초 후에 내 자신 파괴
     IEnumerator DieProcess()
@@ -127,6 +140,8 @@ public class EnemyFSM : MonoBehaviour
         print("사망");
         Destroy(gameObject);
     }
+
+
     //목표7: 플레이어의 공격을 받으면 플레이어의 hitDamage만큼 hp를 감소시킨다.
     //목표8: 에너미의 체력이 0보다 크면 피격 상태로 전환
     //목표9: 그렇지 않으면 죽음 상태로 전환
