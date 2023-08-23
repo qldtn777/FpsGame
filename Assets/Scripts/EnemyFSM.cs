@@ -33,6 +33,14 @@ using UnityEngine.UI;
 
 //목적8: 현재 에너미의 Hp(%)를 슬라이더에 적용한다.
 //필요속성8: hp(이미있음), maxHp, Slider
+
+
+//목적9: Idle 상태에서 Move상태로 Animation을 전환한다.
+//필요속성9: Animator
+
+//목적10: Idle 상태에서 Move상태로 Animation을 전환한다.
+//필요속성10: Animator(이미 있음)
+
 public class EnemyFSM : MonoBehaviour
 {
     //필요속성1: 에너미 상태
@@ -81,6 +89,11 @@ public class EnemyFSM : MonoBehaviour
     int maxHp= 3;
     public Slider hpSlider;
 
+
+    //필요속성9: Animator
+    Animator animator;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -93,12 +106,20 @@ public class EnemyFSM : MonoBehaviour
         originPos = transform.position;
 
         maxHp = hp;
+
+        animator = GetComponentInChildren<Animator>();
     }
 
 
     // Update is called once per frame
-    void Update()
+    void Update()   
     {
+        //목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
+        if (GameManager.Instance.state != GameManager.GameState.Start)
+        {
+            return;
+        }
+
         //목표1: 적을 FSM 다이어그램에 따라 동작시킨다.
         switch (enemyState)
         {
@@ -137,6 +158,8 @@ public class EnemyFSM : MonoBehaviour
     //2초 후에 내 자신 파괴
     IEnumerator DieProcess()
     {
+        animator.SetTrigger("Die");
+
         yield return new WaitForSeconds(2);
 
         print("사망");
@@ -158,7 +181,7 @@ public class EnemyFSM : MonoBehaviour
         //플레이어의 공격력 만큼 hp를 감소
         hp -= damage;
 
-        //목표8: 에너미의 체력이 0보다 크면 피격 상태로 전환
+        //목표8: 에너미의 체력이 0보다 크면 피격 상태로 전환1
         if(hp>0)
         {
             enemyState = EnemyState.Damaged;
@@ -179,8 +202,12 @@ public class EnemyFSM : MonoBehaviour
     {
         //피격 모션 0.5
 
+        animator.SetTrigger("Damaged");
+
         //피격 상태 처리를 위한 코루틴 실행
        StartCoroutine(DamageProcess());
+
+
     }
     //데미지 처리용
     IEnumerator DamageProcess()
@@ -191,6 +218,8 @@ public class EnemyFSM : MonoBehaviour
         //이동 상태로 전환
         enemyState = EnemyState.Move;
         print("상태 전환: Damaged -> Move");
+
+        animator.SetTrigger("DamagedToMove");
     }
     private void Return()
     {
@@ -206,6 +235,8 @@ public class EnemyFSM : MonoBehaviour
         {
             enemyState = EnemyState.Idle;   
             print("상태 변환:Return -> Idle");
+
+            animator.SetTrigger("ReturnToIdle");
         }
     }
 
@@ -221,26 +252,36 @@ public class EnemyFSM : MonoBehaviour
             {
                 if (player.GetComponent<PlayerMove>().hp < 0)
                 {
+                    //player.GetComponent<PlayerMove>().DamageAction(attackPower);
                     enemyState = EnemyState.Idle;
                     print("상태 변환:Return -> Idle");
                     return;
                 }
 
-                player.GetComponent<PlayerMove>().DamageAction(attackPower);
+               
                 print("공격!");
                 currentTime = 0f;
+
+                animator.SetTrigger("AttackDelayToAttack");
             }
         }
         else
-        {
+        {   
             //그렇지 않으면 Move로 상태를 전환한다.
             enemyState = EnemyState.Move;
             print("상태 전환: Attack -> Move");
             currentTime = 0f;
+
+            animator.SetTrigger("AttackToMove");
+            
         }
     }
 
-    
+    public void AttackAction()
+    {
+        player.GetComponent<PlayerMove>().DamageAction(attackPower);
+    }
+
     private void Move()
     {
         //목적3: 적의 상태가 Move일 때, 플레이어와의 거리가 공격 범위 밖이면 적이 플레이어를 따라간다.
@@ -253,6 +294,10 @@ public class EnemyFSM : MonoBehaviour
         {
             enemyState = EnemyState.Return;
             print("상태 전환: Move -> Return");
+
+            animator.SetTrigger("MoveToReturn");
+
+            transform.forward = (originPos - transform.position).normalized;
         }
         else if (distanceToPlayer > attackDistance)
         {
@@ -260,12 +305,16 @@ public class EnemyFSM : MonoBehaviour
 
 
             characterController.Move(dir*moveSpeed*Time.deltaTime);
+
+            transform.forward = dir;
         }
         else
         {
             enemyState = EnemyState.Attack;
             print("상태 전환 : Move -> Attack");
             currentTime = attackDelay;
+            //목적10: Idle 상태에서 Move상태로 Animation을 전환한다.
+            animator.SetTrigger("MoveToAttackDelay");
         }
     }
 
@@ -280,6 +329,10 @@ public class EnemyFSM : MonoBehaviour
         {
             enemyState = EnemyState.Move;
             print("상태 전환: Idle -> Move");
+
+            //목적9: Idle 상태에서 Move상태로 Animation을 전환한다.
+            animator.SetTrigger("IdleToMove");
         }
+
     }
 }

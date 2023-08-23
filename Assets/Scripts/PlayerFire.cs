@@ -60,7 +60,14 @@ public class PlayerFire : MonoBehaviour
     int remainder;
     public int weaponPower = 2;
     void Update()
-    {
+    { 
+        
+        //목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
+        if (GameManager.Instance.state != GameManager.GameState.Start)
+        {
+            return;
+        }
+
         //순서1: 마우스 마우스 오른쪽 버튼 누른다.
         if (Input.GetMouseButtonDown(1)) //왼쪽은 0, 오른쪽은 1, 휠은 2
         {

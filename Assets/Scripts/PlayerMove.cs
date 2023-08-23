@@ -31,6 +31,8 @@ using UnityEngine.UI;
 //목적6: 플레이어가 죽으면 hitImage의 알파값을 현재 값에서 255로 만들어준다.
 //필요속성6: 현재시간, hitImage 종료시간
 
+
+//목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
 public class PlayerMove : MonoBehaviour
 {
     //필요속성1: 속도
@@ -71,6 +73,16 @@ public class PlayerMove : MonoBehaviour
     // Update is called once per frame   
     void Update()
     {
+
+        //목적4: 현재 플레이어의 Hp(%)를 슬라이더에 적용한다.
+        hpSlider.value = (float)hp / maxHp;
+
+        //목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
+        if (GameManager.Instance.state != GameManager.GameState.Start)
+        {
+            return;
+        }
+
         //목적1: W, A, S, D를 누르면 캐릭터를 그 방향으로 이동시키고 싶다.
         //1-1: 사용자의 W, A, S, D입력을 받는다.
         float h = Input.GetAxis("Horizontal");
@@ -106,8 +118,6 @@ public class PlayerMove : MonoBehaviour
         characterController.Move(dir * speed * Time.deltaTime);
 
 
-        //목적4: 현재 플레이어의 Hp(%)를 슬라이더에 적용한다.
-        hpSlider.value = (float)hp / maxHp;
     }
     //목적3: 플레이어가 피격을 당하면 hp를 damage만큼 깍는다.
     public void DamageAction(int damage)

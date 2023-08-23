@@ -17,7 +17,12 @@ public class CamRotate : MonoBehaviour
 
 
     void Update()
-    {
+    { //목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
+        if (GameManager.Instance.state != GameManager.GameState.Start)
+        {
+            return;
+        }
+
         //순서1: 사용자의 마우스 입력(X,Y)을 받는다.
         float mouseX = Input.GetAxis("Mouse X");
         float mouseY = Input.GetAxis("Mouse Y");

@@ -8,6 +8,12 @@ public class PlayerRotate : MonoBehaviour
     public float speed = 200.0f;
     void Update()
     {
+        //목적7: Ready상태일 때는 플레이어,적이 움직일 수 없도록 한다.
+        if (GameManager.Instance.state != GameManager.GameState.Start)
+        {
+            return;
+        }
+
         //순서1: 사용자의 마우스 입력(X,Y)을 받는다.
         float mouseX = Input.GetAxis("Mouse X");
         
